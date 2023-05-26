@@ -1,6 +1,6 @@
 {
   "name": "app-component",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "vue3.0 浮动面板",
   "main": "lib/app-component.js",
   "module": "es/index.js",
@@ -59,9 +59,9 @@
     "iOS >= 10"
   ],
   "repository": {
-  "type": "git",
-  "url": "git@github.com:QXK169/app-component.git"
-},
+    "type": "git",
+    "url": "git@github.com:QXK169/app-component.git"
+  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public"
