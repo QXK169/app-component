@@ -17,8 +17,10 @@
 </template>
 
 <script setup>
+import VConsole from 'vconsole';
 import FloatingPanel from '../FloatingPanel';
 import { ref } from 'vue';
+const vConsole = new VConsole({ theme: 'dark' });
 
 const anchors = ref([
   window.innerHeight * 0.1,

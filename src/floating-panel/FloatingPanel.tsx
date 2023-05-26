@@ -1,12 +1,9 @@
 import { defineComponent, ref, computed, watch } from 'vue';
 import { useLockScroll } from './use-lock-scroll';
 import { useDraggable } from '@vueuse/core';
-import VConsole from 'vconsole';
 
 const MIN_DISTANCE = 40;
 
-const vConsole = new VConsole({ theme: 'dark' });
-console.log(vConsole);
 
 export default defineComponent({
   name: 'FloatingPanel',

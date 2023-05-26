@@ -17,12 +17,13 @@
     "build": "vant-cli build",
     "build:site": "vant-cli build-site",
     "release": "vant-cli release --tag next",
+    "publish:patch": "npm run build &&  npm version patch && npm publish",
     "release:site": "pnpm build:site && npx gh-pages -d site-dist",
     "test:watch": "vant-cli test --watch",
     "test:coverage": "open test/coverage/index.html"
   },
   "author": "zhen.wang",
-  "license": "MIT",
+  "license": "ISC",
   "keywords": [
     "ui",
     "vue3",
@@ -57,8 +58,12 @@
     "Chrome >= 51",
     "iOS >= 10"
   ],
+  "repository": {
+  "type": "git",
+  "url": "git@github.com:QXK169/app-component.git"
+},
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
+    "registry": "https://registry.npmjs.org",
     "access": "public"
   },
   "dependencies": {
