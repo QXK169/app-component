@@ -1,0 +1,62 @@
+.gwm-floating-panel {
+    --border-radius: 8px;
+    --header-height: 28px;
+    --z-index: 100;
+    --gwm-color-background: #fff;
+    --gwm-color-light: #ccc;
+
+    position: fixed;
+    z-index: var(--z-index);
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    touch-action: none;
+    transform: translate3d(0, 0, 0);
+    &-mask {
+      display: block;
+      width: 100%;
+      height: 100vh;
+      position: absolute;
+      left: 0;
+      top: -100vh;
+      background: transparent;
+    }
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      bottom: -100vh;
+      height: 100vh;
+      width: 100vw;
+      background: var(--gwm-color-background);
+    }
+    .gwm-floating-panel-header {
+      flex: none;
+      height: var(--header-height);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: grab;
+      user-select: none;
+      background-color: var(--gwm-color-background);
+      border-top-left-radius: var(--border-radius);
+      border-top-right-radius: var(--border-radius);
+
+      .gwm-floating-panel-bar {
+        height: 3px;
+        width: 20px;
+        border-radius: 10px;
+        background: var(--gwm-color-light);
+      }
+    }
+    .gwm-floating-panel-content {
+      flex: 1;
+      overflow-y: scroll;
+      background: var(--gwm-color-background);
+    }
+  }
+  .gwm-transition {
+    transition: all 0.3s;
+  }
