@@ -1,6 +1,6 @@
 {
-  "name": "app-component",
-  "version": "1.0.1",
+  "name": "qxk-app-component",
+  "version": "1.0.0",
   "description": "vue3.0 浮动面板",
   "main": "lib/app-component.js",
   "module": "es/index.js",
@@ -17,6 +17,7 @@
     "build": "vant-cli build",
     "build:site": "vant-cli build-site",
     "release": "vant-cli release --tag next",
+    "release:patch": "npm run build &&  release-it patch",
     "publish:patch": "npm run build &&  npm version patch && npm publish",
     "release:site": "pnpm build:site && npx gh-pages -d site-dist",
     "test:watch": "vant-cli test --watch",
@@ -68,6 +69,7 @@
   },
   "dependencies": {
     "@vueuse/core": "^10.1.2",
+    "release-it": "^15.10.3",
     "vconsole": "^3.15.0"
   }
 }
