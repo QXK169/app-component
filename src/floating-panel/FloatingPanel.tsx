@@ -14,7 +14,7 @@ export default defineComponent({
     },
     isFollowScroll: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     height: {
       type: Number,

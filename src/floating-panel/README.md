@@ -31,11 +31,13 @@ const anchors = [画板上边界, 初始化位置, 画板下边界];
 
 ### Props
 
-| 参数           | 说明                        | 类型       | 默认值 |
-| -------------- | --------------------------- | ---------- | ------ |
-| anchors        | 可拖拽至哪些高度，单位为 px | _number[]_ | -      |
-| isFollowScroll | 是否拖拽跟随                | _boolean_  | true   |
-| height | 面板高度                | _number_  | 屏幕的高度   |
+
+| 参数           | 说明                        | 类型       | 默认值   |
+| -------------- | --------------------------- | ---------- | -------- |
+| anchors        | 可拖拽至哪些高度，单位为 px | _number[]_ | -        |
+| isFollowScroll | 是否拖拽跟随                | _boolean_  | false     |
+| height         | 面板高度                    | _number_   | 屏幕高度 |
+| distance       | 上滑 or 下滑阈值            | _number_   | 40       |
 
 ### Slots
 
