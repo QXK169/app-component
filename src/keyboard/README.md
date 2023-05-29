@@ -8,7 +8,7 @@ Keyboard 是一个示例车牌键盘组件
 
 ```js
 import Vue from 'vue';
-import { Keyboard } from '@gwm-ui/h5';
+import { Keyboard } from 'app-component';
 
 Vue.use(Keyboard);
 ```

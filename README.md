@@ -20,7 +20,9 @@ pnpm add qxk-app-component
 
 ## 何时使用
 
+import 'qxk-app-component/lib/index.css'
 import { FloatingPanel } from 'qxk-app-component'
+
 
 用户可自由灵活上下滑动浏览内容，常用于地图导航。
 const anchors = [100, window.innerHeight * 0.4, window.innerHeight * 0.8];
