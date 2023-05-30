@@ -5,7 +5,7 @@ export default {
       preprocessor: 'less',
     },
     site: {
-      publicPath: '/app-component/',
+      publicPath: './',
     },
   },
   site: {
