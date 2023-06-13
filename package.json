@@ -1,6 +1,6 @@
 {
   "name": "qxk-app-component",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "vue3.0 浮动面板",
   "main": "lib/app-component.js",
   "module": "es/index.js",
