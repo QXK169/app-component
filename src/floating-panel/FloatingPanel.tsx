@@ -1,6 +1,6 @@
-import { defineComponent, ref, computed, watch } from 'vue';
+import { defineComponent, ref, computed, watch, onMounted } from 'vue';
 import { useLockScroll } from './use-lock-scroll';
-import { useDraggable } from '@vueuse/core';
+import { useDraggable } from './useDraggable';
 
 const MIN_DISTANCE = 40;
 
@@ -30,9 +30,11 @@ export default defineComponent({
     //
     const anchors: any = ref<any>(props.anchors);
     const pulling = ref<boolean>(false);
-    const isScroll = ref<boolean>(false);
     const startY = ref(0);
+  
     const nextY = ref(anchors.value[anchors.value.length - 2]);
+    // 最后位置
+    const lastY = ref(nextY.value);
     // 盒子高度
     const maxHeight = computed(() =>
       Math.ceil(props.height - anchors.value[0])
@@ -59,100 +61,97 @@ export default defineComponent({
 
     useLockScroll(elementRef, () => true);
 
-    useDraggable(elementRef, {
-      onStart: (_, event) => {
-        const { target } = event as any;
-        const header = headerRef.value;
+    onMounted(() => {
+      useDraggable(elementRef, {
+        onStart: (_, event) => {
+          touchStartTime = Date.now();
+          const { target, touches } = event as any;
+          const header = headerRef.value;
 
-        if (header === target || header?.contains(target)) {
-          pulling.value = true;
-        }
-        startY.value = event.y;
-      },
-      onMove: (position: any, event) => {
-        // 处理点击事件
-        touchStartTime = Date.now();
-        const direction = event.y > startY.value ? 'down' : 'up';
-        const reachedTop = nextY.value <= bounds.value.bottom; // 是否到达顶部
-        const content = contentRef.value;
-        if (!content) return;
-        if (reachedTop) {
-          if (content?.scrollTop <= 0 && direction === 'down') {
+          if (header === target || header?.contains(target)) {
             pulling.value = true;
-            isScroll.value = false;
           }
-        } else {
-          pulling.value = true;
-        }
-
-        if (!pulling.value) return;
-        if (isScroll.value) return;
-        if (event.cancelable) {
-          event.preventDefault();
-        }
-        event.stopPropagation();
-
-        // 处理上下边界问题
-        if (position.y < bounds.value.bottom) {
-          position.y = bounds.value.bottom;
-          pulling.value = false;
-        }
-        if (position.y > bounds.value.top) {
-          position.y = bounds.value.top;
-          pulling.value = false;
-        }
-        const duration = Date.now() - touchStartTime;
-        if (Math.abs(event.y - startY.value) < MIN_DISTANCE && duration < 100) {
-          return;
-        } 
-        console.log( Math.abs(event.y - startY.value));
-        nextY.value = position.y;
-      },
-      onEnd: (position, event) => {
-        if (!pulling.value) return;
-        const direction = event.y > startY.value ? 'down' : 'up';
-        pulling.value = false;
-        const duration = Date.now() - touchStartTime;
-        // 处理点击事件
-        if (Math.abs(event.y - startY.value) < 8 && duration < 100) {
-          return;
-        }
-        console.log('结束')
-
-        let nextAnchor: any = nextY.value;
-
-        if (props.isFollowScroll) {
-          nextY.value = position.y;
-        } else {
-          if (direction === 'up') {
-            // Find next anchor upwards
-            for (let i = anchors.value.length - 1; i >= 0; i--) {
-              if (anchors.value[i] < nextY.value) {
-                nextAnchor = anchors.value[i];
-                break;
-              }
-            }
-          } else {
-            // Find next anchor downwards
-            for (let i = 0; i < anchors.value.length; i++) {
-              if (anchors.value[i] > nextY.value) {
-                nextAnchor = anchors.value[i];
-                break;
-              }
-            }
-          }
-
-          // nextY.value = nearest(anchors, position.y);
-          nextY.value = nextAnchor;
+          startY.value = touches[0].clientY;
+        },
+        onMove: (position: any, event) => {
+          const poz = event.touches[0];
+          const direction = poz.clientY > startY.value ? 'down' : 'up';
           const reachedTop = nextY.value <= bounds.value.bottom; // 是否到达顶部
+          const content = contentRef.value;
+          if (!content) return;
           if (reachedTop) {
-            isScroll.value = true;
+            if (content?.scrollTop <= 0 && direction === 'down') {
+              pulling.value = true;
+            }
           } else {
-            isScroll.value = false;
+            pulling.value = true;
           }
-        }
-        emit('heightChange', window.innerHeight - nextY.value);
-      },
+
+          if (!pulling.value) return;
+          if (event.cancelable) {
+            event.preventDefault();
+          }
+          event.stopPropagation();
+
+          // 处理上下边界问题
+          if (position.y < bounds.value.bottom) {
+            position.y = bounds.value.bottom;
+            pulling.value = false;
+          }
+          if (position.y > bounds.value.top) {
+            position.y = bounds.value.top;
+            pulling.value = false;
+          }
+          const duration = Date.now() - touchStartTime;
+          if (Math.abs(poz.clientY - startY.value) < MIN_DISTANCE && duration < 100) {
+            return false;
+          }
+          nextY.value = position.y;
+        },
+        onEnd: (position, event) => {
+          const poz = event.changedTouches[0];
+          let nextAnchor: any = nextY.value;
+          if (!pulling.value) return;
+          // 根据move距离判断方向
+          const direction = poz.clientY > startY.value ? 'down' : 'up';
+          pulling.value = false;
+
+          if (Math.abs(poz.clientY - startY.value) < MIN_DISTANCE) {
+            console.log('结束');
+            // 恢复
+            nextY.value = lastY.value;
+            return;
+          }
+
+          if (props.isFollowScroll) {
+            nextY.value = position.y;
+          } else {
+            if (direction === 'up') {
+              // Find next anchor upwards
+              for (let i = anchors.value.length - 1; i >= 0; i--) {
+                if (anchors.value[i] < nextY.value) {
+                  nextAnchor = anchors.value[i];
+                  break;
+                }
+              }
+            } else {
+              // Find next anchor downwards
+              for (let i = 0; i < anchors.value.length; i++) {
+                if (anchors.value[i] > nextY.value) {
+                  nextAnchor = anchors.value[i];
+                  break;
+                }
+              }
+            }
+
+            // nextY.value = nearest(anchors.value, position.y);
+            nextY.value = nextAnchor;
+          }
+          lastY.value = nextY.value;
+          emit('heightChange', window.innerHeight - nextY.value);
+        },
+        passive: false,
+      });
     });
 
     // 设置位置
@@ -186,7 +185,6 @@ export default defineComponent({
       <div
         class="gwm-floating-panel-content"
         ref={contentRef}
-        style={{ overflow: isScroll.value ? 'scroll' : 'hidden' }}
       >
         {slots.default?.()}
       </div>

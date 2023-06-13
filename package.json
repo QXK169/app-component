@@ -68,8 +68,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@vueuse/core": "^10.1.2",
     "release-it": "^15.10.3",
+    "vant": "^4.5.0",
     "vconsole": "^3.15.0"
   }
 }
