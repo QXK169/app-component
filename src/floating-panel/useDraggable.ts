@@ -74,9 +74,11 @@ export function useDraggable(target, options = {} as any) {
   };
 
   const cancel = (e) => {
+    if (!filterEvent(e)) return;
+    if (!pressedDelta.value) return;
     onCancel?.(position.value, e);
     handleEvent(e);
-  }
+  };
 
   const config = { capture: options?.capture ?? true, passive };
   useEventListener(draggingElement, 'touchstart', start, config);
@@ -88,6 +90,8 @@ export function useDraggable(target, options = {} as any) {
     ...toRefs(position),
     position,
     isDragging: computed(() => !!pressedDelta.value),
-    style: computed(() => `left:${position.value.x}px;top:${position.value.y}px;`),
+    style: computed(
+      () => `left:${position.value.x}px;top:${position.value.y}px;`
+    ),
   };
 }
