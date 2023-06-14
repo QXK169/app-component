@@ -16,6 +16,7 @@ export function useDraggable(target, options = {} as any) {
     onMove,
     onEnd,
     onStart,
+    onCancel,
     initialValue,
     axis = 'both',
     draggingElement = target,
@@ -72,10 +73,16 @@ export function useDraggable(target, options = {} as any) {
     handleEvent(e);
   };
 
+  const cancel = (e) => {
+    onCancel?.(position.value, e);
+    handleEvent(e);
+  }
+
   const config = { capture: options?.capture ?? true, passive };
   useEventListener(draggingElement, 'touchstart', start, config);
   useEventListener(draggingElement, 'touchmove', move, config);
   useEventListener(draggingElement, 'touchend', end, config);
+  useEventListener(draggingElement, 'touchcancel', cancel, config);
 
   return {
     ...toRefs(position),

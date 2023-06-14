@@ -33,8 +33,12 @@
   import GwFloatingPanel from '../index.ts';
   import { Switch, Button, List } from 'vant';
   import { ref } from 'vue';
-
+  import VConsole from 'vconsole';
   // const anchors = [100, window.innerHeight * 0.4, window.innerHeight * 0.8];
+
+  const vConsole = new VConsole();
+  console.log(vConsole)
+
   const anchors = ref([
     window.innerHeight * 0.1,
     window.innerHeight * 0.6,

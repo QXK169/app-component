@@ -117,7 +117,7 @@ export default defineComponent({
           pulling.value = false;
 
           if (Math.abs(poz.clientY - startY.value) < MIN_DISTANCE) {
-            console.log('结束');
+            console.log('结束', lastY.value,  nextY.value );
             // 恢复
             nextY.value = lastY.value;
             return;
@@ -149,6 +149,10 @@ export default defineComponent({
           }
           lastY.value = nextY.value;
           emit('heightChange', window.innerHeight - nextY.value);
+        },
+        onCancel: () => {
+          nextY.value = lastY.value;
+          console.log('cancle');
         },
         passive: false,
       });
